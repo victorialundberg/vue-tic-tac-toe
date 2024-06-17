@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TicTacToe from './components/TicTacToe.vue';
+import TicTacToeApp from './components/TicTacToeApp.vue';
 </script>
 
 <template>
-    <TicTacToe></TicTacToe>
+    <TicTacToeApp></TicTacToeApp>
 </template>
 
 <style scoped></style>

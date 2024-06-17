@@ -8,13 +8,18 @@ interface IPlayerProps {
 
 const props = defineProps<IPlayerProps>();
 
+const emit = defineEmits<{
+    (e: "startGame", index: number): void;
+}>();
+
 let playerSymbol = ref("");
 const playerName = ref("");
 let displayForm = ref(true);
 let displayStartBtn = ref(false);
+let firstPlayer = ref(Math.floor(Math.random() * 2));
 
 const handleSubmit = () => {
-    // // dont empty here, make an emit from "start over" btn
+
     if (props.players.length === 0) {
         playerSymbol.value = "X"
 
@@ -28,6 +33,10 @@ const handleSubmit = () => {
     playerName.value = "";
 };
 
+const handleClick = () => {
+    emit("startGame", firstPlayer.value);
+};
+
 
 </script>
 
@@ -37,7 +46,7 @@ const handleSubmit = () => {
             <input type="text" v-model="playerName" placeholder="Ange ditt namn">
             <button>Nästa</button>
         </form>
-        <button v-if="displayStartBtn">Starta spel</button>
+        <button v-if="displayStartBtn" @click="handleClick">Starta spel</button>
     </div>
 </template>
 
