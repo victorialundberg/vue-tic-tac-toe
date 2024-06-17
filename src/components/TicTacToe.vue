@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Player } from '../models/Player'
-import AssignPlayers from './AssignPlayers.vue'
+import { Player } from '../models/Player';
+import AssignPlayers from './AssignPlayers.vue';
+import PrintPlayers from './PrintPlayers.vue';
 
-const players = ref<Player[]>([new Player("victoria", "X", 0), new Player("victoria", "X", 0)]);
+const players = ref<Player[]>([]);
+
 
 </script>
 
 <template>
-    <div v-for="(player, i) in players" :key="i">
-        {{ player.name }}
-    </div>
+    <PrintPlayers :players="players"></PrintPlayers>
     <AssignPlayers :players="players"></AssignPlayers>
 </template>
 
