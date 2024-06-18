@@ -2,8 +2,9 @@
 import { ref } from 'vue';
 import { Player } from '../models/Player';
 
-const gameBoard: number[][] = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
 let gameDone = ref(false);
+
 
 interface IGameProps {
     firstPlayer: number;
@@ -11,9 +12,16 @@ interface IGameProps {
 };
 const props = defineProps<IGameProps>();
 
-const draw = (i: number) => {
-    console.log(i);
+let playerTurn = ref(props.players[props.firstPlayer].symbol);
 
+const draw = (x: number, y: number) => {
+    if (playerTurn.value === "X") {
+        gameBoard.value[x][y] = "X";
+        playerTurn.value = "O"
+    } else if (playerTurn.value === "O") {
+        gameBoard.value[x][y] = "O";
+        playerTurn.value = "X";
+    }
 
 };
 
@@ -22,8 +30,11 @@ const draw = (i: number) => {
 <template>
     <h2>{{ players[firstPlayer].symbol }} gör första draget!</h2>
     <div class="grid">
-        <div v-for="(row, i) in gameBoard" :key="i" class="row">
-            <div v-for="(i) in row" :key="i" class="grid-box" @click="() => { draw(i) }"></div>
+        <div v-for="(row, rowIndex) in gameBoard" :key="rowIndex" class="row">
+            <div v-for="(box, boxIndex) in row" :key="boxIndex" class="grid-box"
+                @click="() => { draw(rowIndex, boxIndex) }">
+                {{ gameBoard[rowIndex][boxIndex] }}
+            </div>
         </div>
     </div>
     <div>
@@ -40,6 +51,7 @@ const draw = (i: number) => {
     width: 100px;
     height: 100px;
     border: 2px solid black;
+
 
     &:hover {
         background-color: lightgray;
