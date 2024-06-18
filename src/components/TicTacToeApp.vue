@@ -20,7 +20,7 @@ const startGame = (index: number) => {
 <template>
     <PrintPlayers :players="players"></PrintPlayers>
     <AssignPlayers v-if="!gameOn" :players="players" @start-game="startGame"></AssignPlayers>
-    <TheGame v-if="gameOn" :first-player="firstPlayer"></TheGame>
+    <TheGame v-if="gameOn" :first-player="firstPlayer" :players="players"></TheGame>
 </template>
 
 <style scoped></style>
