@@ -15,13 +15,16 @@ const props = defineProps<IGameProps>();
 let playerTurn = ref(props.players[props.firstPlayer].symbol);
 
 const draw = (x: number, y: number) => {
-    if (playerTurn.value === "X") {
-        gameBoard.value[x][y] = "X";
-        playerTurn.value = "O"
-    } else if (playerTurn.value === "O") {
-        gameBoard.value[x][y] = "O";
-        playerTurn.value = "X";
+    if (gameBoard.value[x][y] === "") {
+        if (playerTurn.value === "X") {
+            gameBoard.value[x][y] = "X";
+            playerTurn.value = "O"
+        } else if (playerTurn.value === "O") {
+            gameBoard.value[x][y] = "O";
+            playerTurn.value = "X";
+        }
     }
+
 
 };
 
