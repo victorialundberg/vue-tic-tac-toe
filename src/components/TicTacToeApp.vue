@@ -15,12 +15,22 @@ const startGame = (index: number) => {
     firstPlayer.value = index;
 }
 
+const clearGame = (value: boolean) => {
+    gameOn.value = value;
+};
+
+const clearPlayers = (value: Player[]) => {
+    players.value = value;
+};
+
 </script>
 
 <template>
     <PrintPlayers :players="players"></PrintPlayers>
     <AssignPlayers v-if="!gameOn" :players="players" @start-game="startGame"></AssignPlayers>
-    <TheGame v-if="gameOn" :first-player="firstPlayer" :players="players"></TheGame>
+    <TheGame v-if="gameOn" :first-player="firstPlayer" :players="players" :game-on="gameOn" @clear-game="clearGame"
+        @clear-players="clearPlayers">
+    </TheGame>
 </template>
 
 <style scoped></style>

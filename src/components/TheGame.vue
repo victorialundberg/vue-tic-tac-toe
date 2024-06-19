@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Player } from '../models/Player';
+import { defineEmits } from 'vue';
 
 const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
-let gameDone = ref(false);
+let gameDone = ref(true);
 let firstMove = ref(true);
+let gameOn = ref(true);
 
 interface IGameProps {
     firstPlayer: number;
     players: Player[];
+    gameOn: boolean;
 };
 const props = defineProps<IGameProps>();
 
@@ -29,12 +32,22 @@ const makeMove = (x: number, y: number) => {
     firstMove.value = false;
 
 
+
     // function for calculating win
 };
 
 // function for calculating win
 
-
+const clearGame = () => {
+    gameOn.value = false;
+    emit("clearGame", gameOn.value);
+    emit("clearPlayers", []);
+    gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
+};
+const emit = defineEmits<{
+    (e: "clearGame", value: boolean): void;
+    (e: "clearPlayers", value: Player[]): void;
+}>();
 
 </script>
 
@@ -51,7 +64,7 @@ const makeMove = (x: number, y: number) => {
     <div>
         <button>Visa poängställning</button>
         <button>Avsluta</button>
-        <button v-if="gameDone">Spela igen</button>
+        <button v-if="gameDone" @click="clearGame">Spela igen</button>
     </div>
 </template>
 
