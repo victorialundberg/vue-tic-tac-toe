@@ -4,7 +4,7 @@ import { Player } from '../models/Player';
 
 const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
 let gameDone = ref(false);
-
+let firstMove = ref(true);
 
 interface IGameProps {
     firstPlayer: number;
@@ -14,7 +14,9 @@ const props = defineProps<IGameProps>();
 
 let playerTurn = ref(props.players[props.firstPlayer].symbol);
 
-const draw = (x: number, y: number) => {
+const makeMove = (x: number, y: number) => {
+
+
     if (gameBoard.value[x][y] === "") {
         if (playerTurn.value === "X") {
             gameBoard.value[x][y] = "X";
@@ -24,18 +26,24 @@ const draw = (x: number, y: number) => {
             playerTurn.value = "X";
         }
     }
+    firstMove.value = false;
 
 
+    // function for calculating win
 };
+
+// function for calculating win
+
+
 
 </script>
 
 <template>
-    <h2>{{ players[firstPlayer].symbol }} gör första draget!</h2>
+    <h2 v-if="firstMove">{{ players[firstPlayer].symbol }} gör första draget!</h2>
     <div class="grid">
         <div v-for="(row, rowIndex) in gameBoard" :key="rowIndex" class="row">
             <div v-for="(box, boxIndex) in row" :key="boxIndex" class="grid-box"
-                @click="() => { draw(rowIndex, boxIndex) }">
+                @click="() => { makeMove(rowIndex, boxIndex) }">
                 {{ gameBoard[rowIndex][boxIndex] }}
             </div>
         </div>
