@@ -63,8 +63,8 @@ const emit = defineEmits<{
     </div>
     <div>
         <button>Visa poängställning</button>
-        <button>Avsluta</button>
-        <button v-if="gameDone" @click="clearGame">Spela igen</button>
+        <button>Spela igen</button>
+        <button v-if="gameDone" @click="clearGame">Avsluta</button>
     </div>
 </template>
 
