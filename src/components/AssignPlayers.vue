@@ -9,14 +9,14 @@ interface IPlayerProps {
 const props = defineProps<IPlayerProps>();
 
 const emit = defineEmits<{
-    (e: "startGame", index: number): void;
+    (e: "startGame"): void;
 }>();
 
 let playerSymbol = ref("");
 const playerName = ref("");
 let displayForm = ref(true);
 let displayStartBtn = ref(false);
-let firstPlayer = ref(Math.floor(Math.random() * 2));
+// let firstPlayer = ref(Math.floor(Math.random() * 2));
 
 const handleSubmit = () => {
 
@@ -34,7 +34,7 @@ const handleSubmit = () => {
 };
 
 const handleClick = () => {
-    emit("startGame", firstPlayer.value);
+    emit("startGame");
 };
 
 

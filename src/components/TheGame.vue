@@ -38,6 +38,13 @@ const makeMove = (x: number, y: number) => {
 
 // function for calculating win
 
+const playAgain = () => {
+    emit('playAgain');
+
+    gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
+    firstMove.value = true;
+};
+
 const clearGame = () => {
     gameOn.value = false;
     emit("clearGame", gameOn.value);
@@ -47,6 +54,7 @@ const clearGame = () => {
 const emit = defineEmits<{
     (e: "clearGame", value: boolean): void;
     (e: "clearPlayers", value: Player[]): void;
+    (e: "playAgain"): void;
 }>();
 
 </script>
@@ -63,7 +71,7 @@ const emit = defineEmits<{
     </div>
     <div>
         <button>Visa poängställning</button>
-        <button>Spela igen</button>
+        <button @click="playAgain">Spela igen</button>
         <button v-if="gameDone" @click="clearGame">Avsluta</button>
     </div>
 </template>

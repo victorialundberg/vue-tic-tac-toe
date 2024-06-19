@@ -7,12 +7,13 @@ import TheGame from './TheGame.vue';
 
 const players = ref<Player[]>([]);
 let gameOn = ref(false);
-let firstPlayer = ref(0);
+// let firstPlayer = ref(0);
+let firstPlayer = ref();
 
-const startGame = (index: number) => {
+const startGame = () => {
     gameOn.value = true;
     console.log("THE GAMES HAVE BEGUN");
-    firstPlayer.value = index;
+    firstPlayer.value = Math.floor(Math.random() * 2)
 }
 
 const clearGame = (value: boolean) => {
@@ -29,7 +30,7 @@ const clearPlayers = (value: Player[]) => {
     <PrintPlayers :players="players"></PrintPlayers>
     <AssignPlayers v-if="!gameOn" :players="players" @start-game="startGame"></AssignPlayers>
     <TheGame v-if="gameOn" :first-player="firstPlayer" :players="players" :game-on="gameOn" @clear-game="clearGame"
-        @clear-players="clearPlayers">
+        @clear-players="clearPlayers" @play-again="startGame">
     </TheGame>
 </template>
 
