@@ -39,7 +39,13 @@ const makeMove = (x: number, y: number) => {
 // function for calculating win
 
 const playAgain = () => {
+    console.log("före");
+
     emit('playAgain');
+    console.log("efter");
+    playerTurn = ref(props.players[props.firstPlayer].symbol);
+    console.log(props.firstPlayer);
+
 
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
     firstMove.value = true;
@@ -60,7 +66,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <h2 v-if="firstMove">{{ players[firstPlayer].symbol }} gör första draget!</h2>
+    <h2 v-if="firstMove">{{ playerTurn }} gör första draget!</h2>
     <div class="grid">
         <div v-for="(row, rowIndex) in gameBoard" :key="rowIndex" class="row">
             <div v-for="(box, boxIndex) in row" :key="boxIndex" class="grid-box"
