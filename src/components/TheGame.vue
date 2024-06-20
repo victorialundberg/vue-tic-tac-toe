@@ -7,6 +7,8 @@ const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
 let gameDone = ref(true);
 let firstMove = ref(true);
 let gameOn = ref(true);
+let winner = ref(false);
+let tied = ref(false);
 
 interface IGameProps {
     firstPlayer: number;
@@ -23,20 +25,35 @@ const makeMove = (x: number, y: number) => {
     if (gameBoard.value[x][y] === "") {
         if (playerTurn.value === "X") {
             gameBoard.value[x][y] = "X";
+            calculateWin(playerTurn.value);
             playerTurn.value = "O"
         } else if (playerTurn.value === "O") {
             gameBoard.value[x][y] = "O";
+            calculateWin(playerTurn.value);
             playerTurn.value = "X";
         }
     }
     firstMove.value = false;
-
-
-
-    // function for calculating win
 };
 
 // function for calculating win
+const calculateWin = (playerTurn: string) => {
+    if (gameBoard.value[0][0] === playerTurn && gameBoard.value[0][1] === playerTurn && gameBoard.value[0][2] === playerTurn ||
+        gameBoard.value[1][0] === playerTurn && gameBoard.value[1][1] === playerTurn && gameBoard.value[1][2] === playerTurn ||
+        gameBoard.value[2][0] === playerTurn && gameBoard.value[2][1] === playerTurn && gameBoard.value[2][2] === playerTurn ||
+
+        gameBoard.value[0][0] === playerTurn && gameBoard.value[1][0] === playerTurn && gameBoard.value[2][0] === playerTurn ||
+        gameBoard.value[0][1] === playerTurn && gameBoard.value[1][1] === playerTurn && gameBoard.value[2][1] === playerTurn ||
+        gameBoard.value[0][2] === playerTurn && gameBoard.value[1][2] === playerTurn && gameBoard.value[2][2] === playerTurn ||
+
+        gameBoard.value[0][0] === playerTurn && gameBoard.value[1][1] === playerTurn && gameBoard.value[2][2] === playerTurn ||
+        gameBoard.value[0][2] === playerTurn && gameBoard.value[1][1] === playerTurn && gameBoard.value[2][0] === playerTurn
+    ) {
+        winner.value = true;
+    }
+    // Check if board is full but not a win
+};
+
 
 const playAgain = () => {
     console.log("före");
@@ -49,6 +66,7 @@ const playAgain = () => {
 
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
     firstMove.value = true;
+    winner.value = false;
 };
 
 const clearGame = () => {
@@ -66,6 +84,8 @@ const emit = defineEmits<{
 </script>
 
 <template>
+    <p v-if="winner">DU VANN</p>
+    <p v-if="tied">OAVGJORT</p>
     <h2 v-if="firstMove">{{ playerTurn }} gör första draget!</h2>
     <div class="grid">
         <div v-for="(row, rowIndex) in gameBoard" :key="rowIndex" class="row">
