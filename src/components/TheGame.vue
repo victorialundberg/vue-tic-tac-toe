@@ -9,6 +9,7 @@ let firstMove = ref(true);
 let gameOn = ref(true);
 let winner = ref(false);
 let tied = ref(false);
+let turnCounter = ref(0);
 
 interface IGameProps {
     firstPlayer: number;
@@ -34,9 +35,11 @@ const makeMove = (x: number, y: number) => {
         }
     }
     firstMove.value = false;
+    turnCounter.value++;
+    console.log(turnCounter.value);
+
 };
 
-// function for calculating win
 const calculateWin = (playerTurn: string) => {
     if (gameBoard.value[0][0] === playerTurn && gameBoard.value[0][1] === playerTurn && gameBoard.value[0][2] === playerTurn ||
         gameBoard.value[1][0] === playerTurn && gameBoard.value[1][1] === playerTurn && gameBoard.value[1][2] === playerTurn ||
@@ -51,7 +54,9 @@ const calculateWin = (playerTurn: string) => {
     ) {
         winner.value = true;
     }
-    // Check if board is full but not a win
+    else if (turnCounter.value === 8) {
+        tied.value = true;
+    }
 };
 
 
