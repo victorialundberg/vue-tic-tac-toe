@@ -4,13 +4,13 @@ import { Player } from '../models/Player';
 import { defineEmits } from 'vue';
 
 const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
-let gameDone = ref(true);
+let gameDone = ref(false);
 let firstMove = ref(true);
 let gameOn = ref(true);
 let displayWinner = ref(false);
 let displayTied = ref(false);
 let turnCounter = ref(0);
-// let winner = ref<Player>();
+let winner = ref<Player>();
 
 
 
@@ -58,15 +58,22 @@ const calculateWin = (playerTurn: string) => {
         displayWinner.value = true;
         if (playerTurn === playerX.value.symbol) {
             playerX.value.points++
+            winner = playerX;
         } else if (playerTurn === playerO.value.symbol) {
             playerO.value.points++
+            winner = playerO;
         }
+        gameDone.value = true;
     }
     else if (turnCounter.value === 8) {
         displayTied.value = true;
+        gameDone.value = true;
     }
+
     console.log("player o points:", playerO.value.points);
     console.log("player x points:", playerX.value.points);
+    console.log(winner.value?.name);
+
 
 };
 
@@ -83,6 +90,9 @@ const playAgain = () => {
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
     firstMove.value = true;
     displayWinner.value = false;
+    displayTied.value = false;
+    gameDone.value = false;
+    turnCounter.value = 0;
 };
 
 const clearGame = () => {
@@ -100,7 +110,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <p v-if="displayWinner">DU VANN</p>
+    <p v-if="displayWinner">{{ winner?.name }} VANN</p>
     <p v-if="displayTied">OAVGJORT</p>
     <h2 v-if="firstMove">{{ playerTurn }} gör första draget!</h2>
     <div class="grid">
@@ -113,8 +123,8 @@ const emit = defineEmits<{
     </div>
     <div>
         <button>Visa poängställning</button>
-        <button @click="playAgain">Spela igen</button>
-        <button v-if="gameDone" @click="clearGame">Avsluta</button>
+        <button v-if="gameDone" @click="playAgain">Spela igen</button>
+        <button @click="clearGame">Avsluta</button>
     </div>
 </template>
 
