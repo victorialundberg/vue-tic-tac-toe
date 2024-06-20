@@ -4,13 +4,14 @@ import { Player } from '../models/Player';
 import { defineEmits } from 'vue';
 
 const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
-let gameDone = ref(false);
+let displayPlayAgain = ref(false);
 let firstMove = ref(true);
 let gameOn = ref(true);
 let displayWinner = ref(false);
 let displayTied = ref(false);
 let turnCounter = ref(0);
 let winner = ref<Player>();
+let displayBoard = ref(true);
 
 
 
@@ -63,11 +64,13 @@ const calculateWin = (playerTurn: string) => {
             playerO.value.points++
             winner = playerO;
         }
-        gameDone.value = true;
+        displayPlayAgain.value = true;
+        displayBoard.value = false;
     }
     else if (turnCounter.value === 8) {
         displayTied.value = true;
-        gameDone.value = true;
+        displayPlayAgain.value = true;
+        displayBoard.value = false;
     }
 
     console.log("player o points:", playerO.value.points);
@@ -91,8 +94,10 @@ const playAgain = () => {
     firstMove.value = true;
     displayWinner.value = false;
     displayTied.value = false;
-    gameDone.value = false;
+    displayPlayAgain.value = false;
     turnCounter.value = 0;
+    displayBoard.value = true;
+
 };
 
 const clearGame = () => {
@@ -101,19 +106,22 @@ const clearGame = () => {
     emit("clearPlayers", []);
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
 };
+
+const displayPoints = () => {
+    emit("displayPoints");
+};
 const emit = defineEmits<{
     (e: "clearGame", value: boolean): void;
     (e: "clearPlayers", value: Player[]): void;
     (e: "playAgain"): void;
+    (e: "displayPoints"): void;
 }>();
 
 </script>
 
 <template>
-    <p v-if="displayWinner">{{ winner?.name }} VANN</p>
-    <p v-if="displayTied">OAVGJORT</p>
     <h2 v-if="firstMove">{{ playerTurn }} gör första draget!</h2>
-    <div class="grid">
+    <div v-if="displayBoard" class="grid">
         <div v-for="(row, rowIndex) in gameBoard" :key="rowIndex" class="row">
             <div v-for="(box, boxIndex) in row" :key="boxIndex" class="grid-box"
                 @click="() => { makeMove(rowIndex, boxIndex) }">
@@ -121,9 +129,12 @@ const emit = defineEmits<{
             </div>
         </div>
     </div>
+    <h2 v-if="displayTied">Det blev oavgjort!</h2>
+    <h2 v-if="displayWinner">{{ winner?.name }} vann!</h2>
+
     <div>
-        <button>Visa poängställning</button>
-        <button v-if="gameDone" @click="playAgain">Spela igen</button>
+        <button @click="displayPoints">Visa poängställning</button>
+        <button v-if="displayPlayAgain" @click="playAgain">Spela igen</button>
         <button @click="clearGame">Avsluta</button>
     </div>
 </template>
