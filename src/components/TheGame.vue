@@ -7,9 +7,12 @@ const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
 let gameDone = ref(true);
 let firstMove = ref(true);
 let gameOn = ref(true);
-let winner = ref(false);
-let tied = ref(false);
+let displayWinner = ref(false);
+let displayTied = ref(false);
 let turnCounter = ref(0);
+// let winner = ref<Player>();
+
+
 
 interface IGameProps {
     firstPlayer: number;
@@ -19,6 +22,8 @@ interface IGameProps {
 const props = defineProps<IGameProps>();
 
 let playerTurn = ref(props.players[props.firstPlayer].symbol);
+let playerX = ref(props.players[0]);
+let playerO = ref(props.players[1]);
 
 const makeMove = (x: number, y: number) => {
 
@@ -36,8 +41,6 @@ const makeMove = (x: number, y: number) => {
     }
     firstMove.value = false;
     turnCounter.value++;
-    console.log(turnCounter.value);
-
 };
 
 const calculateWin = (playerTurn: string) => {
@@ -52,11 +55,19 @@ const calculateWin = (playerTurn: string) => {
         gameBoard.value[0][0] === playerTurn && gameBoard.value[1][1] === playerTurn && gameBoard.value[2][2] === playerTurn ||
         gameBoard.value[0][2] === playerTurn && gameBoard.value[1][1] === playerTurn && gameBoard.value[2][0] === playerTurn
     ) {
-        winner.value = true;
+        displayWinner.value = true;
+        if (playerTurn === playerX.value.symbol) {
+            playerX.value.points++
+        } else if (playerTurn === playerO.value.symbol) {
+            playerO.value.points++
+        }
     }
     else if (turnCounter.value === 8) {
-        tied.value = true;
+        displayTied.value = true;
     }
+    console.log("player o points:", playerO.value.points);
+    console.log("player x points:", playerX.value.points);
+
 };
 
 
@@ -71,7 +82,7 @@ const playAgain = () => {
 
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
     firstMove.value = true;
-    winner.value = false;
+    displayWinner.value = false;
 };
 
 const clearGame = () => {
@@ -89,8 +100,8 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <p v-if="winner">DU VANN</p>
-    <p v-if="tied">OAVGJORT</p>
+    <p v-if="displayWinner">DU VANN</p>
+    <p v-if="displayTied">OAVGJORT</p>
     <h2 v-if="firstMove">{{ playerTurn }} gör första draget!</h2>
     <div class="grid">
         <div v-for="(row, rowIndex) in gameBoard" :key="rowIndex" class="row">
