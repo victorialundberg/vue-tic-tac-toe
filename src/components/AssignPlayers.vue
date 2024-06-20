@@ -31,6 +31,7 @@ const handleSubmit = () => {
     }
     props.players.push(new Player(playerName.value, playerSymbol.value, 0))
     playerName.value = "";
+    localStorage.setItem("players", JSON.stringify(props.players));
 };
 
 const handleClick = () => {
