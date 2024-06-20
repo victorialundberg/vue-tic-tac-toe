@@ -18,6 +18,7 @@ interface IGameProps {
     firstPlayer: number;
     players: Player[];
     gameOn: boolean;
+    pointsOn: boolean;
 };
 const props = defineProps<IGameProps>();
 
@@ -112,11 +113,19 @@ const clearGame = () => {
 const displayPoints = () => {
     emit("displayPoints");
 };
+
+const displayGame = () => {
+    emit("displayGame");
+    console.log("clicked");
+
+};
+
 const emit = defineEmits<{
     (e: "clearGame", value: boolean): void;
     (e: "clearPlayers", value: Player[]): void;
     (e: "playAgain"): void;
     (e: "displayPoints"): void;
+    (e: "displayGame"): void;
 }>();
 
 </script>
@@ -135,7 +144,8 @@ const emit = defineEmits<{
     <h2 v-if="displayWinner">{{ winner?.name }} vann!</h2>
 
     <div>
-        <button @click="displayPoints">Visa poängställning</button>
+        <button v-if="!pointsOn" @click="displayPoints">Visa poängställning</button>
+        <button v-else @click="displayGame">Stäng</button>
         <button v-if="displayPlayAgain" @click="playAgain">Spela igen</button>
         <button @click="clearGame">Avsluta</button>
     </div>
