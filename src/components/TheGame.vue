@@ -67,6 +67,7 @@ const calculateWin = (playerTurn: string) => {
         }
         displayPlayAgain.value = true;
         displayBoard.value = false;
+        localStorage.setItem("players", JSON.stringify(props.players));
     }
     else if (turnCounter.value === 8) {
         displayTied.value = true;
