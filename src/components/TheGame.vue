@@ -3,7 +3,10 @@ import { ref } from 'vue';
 import { Player } from '../models/Player';
 import { defineEmits } from 'vue';
 
-const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
+// const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
+// gameBoard.value = JSON.parse(localStorage.getItem("gameBoard"));
+const storedGameBoard = (localStorage.getItem("gameBoard"));
+let gameBoard = ref(storedGameBoard ? JSON.parse(storedGameBoard) : [["", "", ""], ["", "", ""], ["", "", ""]])
 let displayPlayAgain = ref(false);
 let firstMove = ref(true);
 let gameOn = ref(true);
