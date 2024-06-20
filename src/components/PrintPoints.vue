@@ -1,12 +1,9 @@
 <script setup lang="ts">
+import { Player } from '../models/Player';
 
+const storedPlayers = localStorage.getItem("players");
+let players: Player[] = storedPlayers ? JSON.parse(storedPlayers) : null;
 
-const displayGame = () => {
-    emit("displayGame");
-}
-const emit = defineEmits<{
-    (e: "displayGame"): void;
-}>();
 </script>
 
 <template>
@@ -16,12 +13,12 @@ const emit = defineEmits<{
             <th>Poäng</th>
         </tr>
         <tr>
-            <td>Spelare 1</td>
-            <td>Poäng 1</td>
+            <td>{{ players[0].name }}</td>
+            <td>{{ players[0].points }}</td>
         </tr>
         <tr>
-            <td>Spelare 2</td>
-            <td>Poäng 2</td>
+            <td>{{ players[1].name }}</td>
+            <td>{{ players[1].points }}</td>
         </tr>
     </table>
     <div>

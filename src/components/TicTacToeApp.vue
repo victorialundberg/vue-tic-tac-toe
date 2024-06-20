@@ -13,16 +13,19 @@ let pointsOn = ref(false);
 
 const startGame = () => {
     gameOn.value = true;
+    pointsOn.value = false;
     console.log("THE GAMES HAVE BEGUN");
     firstPlayer.value = Math.floor(Math.random() * 2)
 }
 
 const clearGame = (value: boolean) => {
     gameOn.value = value;
+    pointsOn.value = false;
 };
 
 const clearPlayers = (value: Player[]) => {
     players.value = value;
+    pointsOn.value = false;
 };
 
 const displayPoints = () => {
