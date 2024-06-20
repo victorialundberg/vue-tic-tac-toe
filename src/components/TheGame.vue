@@ -3,8 +3,6 @@ import { ref } from 'vue';
 import { Player } from '../models/Player';
 import { defineEmits } from 'vue';
 
-// const gameBoard = ref([["", "", ""], ["", "", ""], ["", "", ""]]);
-// gameBoard.value = JSON.parse(localStorage.getItem("gameBoard"));
 const storedGameBoard = (localStorage.getItem("gameBoard"));
 let gameBoard = ref(storedGameBoard ? JSON.parse(storedGameBoard) : [["", "", ""], ["", "", ""], ["", "", ""]])
 let displayPlayAgain = ref(false);
@@ -15,8 +13,6 @@ let displayTied = ref(false);
 let turnCounter = ref(0);
 let winner = ref<Player>();
 let displayBoard = ref(true);
-
-
 
 interface IGameProps {
     firstPlayer: number;
@@ -94,7 +90,7 @@ const playAgain = () => {
     playerTurn = ref(props.players[props.firstPlayer].symbol);
     console.log(props.firstPlayer);
 
-
+    localStorage.removeItem("gameBoard");
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
     firstMove.value = true;
     displayWinner.value = false;
@@ -109,6 +105,7 @@ const clearGame = () => {
     gameOn.value = false;
     emit("clearGame", gameOn.value);
     emit("clearPlayers", []);
+    localStorage.clear();
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
 };
 
