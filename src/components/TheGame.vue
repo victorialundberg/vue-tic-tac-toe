@@ -42,6 +42,7 @@ const makeMove = (x: number, y: number) => {
     }
     firstMove.value = false;
     turnCounter.value++;
+    localStorage.setItem("gameBoard", JSON.stringify(gameBoard.value));
 };
 
 const calculateWin = (playerTurn: string) => {
