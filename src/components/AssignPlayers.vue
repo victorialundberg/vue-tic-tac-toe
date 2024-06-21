@@ -2,6 +2,8 @@
 import { ref } from 'vue';
 import { Player } from '../models/Player';
 
+let continueGame = ref(false);
+
 interface IPlayerProps {
     players: Player[];
 };
@@ -14,16 +16,11 @@ const emit = defineEmits<{
 }>();
 
 
-// if (localStorage.length !== 0) {
-//     console.log("spelare finns");
-//     emit("continueGame");
-// }
 
 let playerSymbol = ref("");
 const playerName = ref("");
 let displayForm = ref(true);
 let displayStartBtn = ref(false);
-// let firstPlayer = ref(Math.floor(Math.random() * 2));
 
 const handleSubmit = () => {
 
@@ -44,14 +41,19 @@ const handleSubmit = () => {
 const handleClick = () => {
     emit("startGame");
 };
+if (localStorage.length !== 0) {
+    continueGame.value = true;
+    displayForm.value = false;
 
+}
 
 </script>
 
 <template>
     <div>
+        <button v-if="continueGame" @click="$emit('continueGame')">Fortsätt spela</button>
         <form v-if="displayForm" @submit.prevent="handleSubmit">
-            <input type="text" v-model="playerName" placeholder="Ange ditt namn">
+            <input type="text" v-model="playerName" placeholder="Ange spelarnamn">
             <button>Nästa</button>
         </form>
         <button v-if="displayStartBtn" @click="handleClick">Starta spel</button>

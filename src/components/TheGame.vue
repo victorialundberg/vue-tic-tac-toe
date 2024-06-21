@@ -19,16 +19,26 @@ let playerTurn = ref();
 let playerX = ref();
 let playerO = ref();
 
+let lastMove = ref();
+
 interface IGameProps {
     firstPlayer: number;
     players: Player[];
     gameOn: boolean;
     pointsOn: boolean;
 };
+let emit = defineEmits<{
+    (e: "clearGame", value: boolean): void;
+    (e: "clearPlayers", value: Player[]): void;
+    (e: "playAgain"): void;
+    (e: "displayPoints"): void;
+    (e: "displayGame"): void;
+}>();
 const props = defineProps<IGameProps>();
 
 const storedPlayers = localStorage.getItem("players")
-const storedGameBoard = (localStorage.getItem("gameBoard"));
+const storedGameBoard = localStorage.getItem("gameBoard");
+// const storedLastMove = localStorage.getItem("lastMove");
 
 if (localStorage.length !== 0) {
     gameBoard.value = storedGameBoard ? JSON.parse(storedGameBoard) : [["", "", ""], ["", "", ""], ["", "", ""]]
@@ -36,6 +46,12 @@ if (localStorage.length !== 0) {
     playerTurn.value = firstPlayerTurn.value?.symbol;
     playerX.value = storedPlayers ? JSON.parse(storedPlayers)[0] : null;
     playerO.value = storedPlayers ? JSON.parse(storedPlayers)[1] : null;
+    if (winner) {
+        // displayBoard.value = false;
+        displayPlayAgain.value = true;
+        firstMove.value = false;
+    }
+    // lastMove.value = storedLastMove;
 } else {
     playerTurn.value = props.players[props.firstPlayer].symbol;
     playerX.value = props.players[0];
@@ -51,10 +67,12 @@ const makeMove = (x: number, y: number) => {
         if (playerTurn.value === "X") {
             gameBoard.value[x][y] = "X";
             calculateWin(playerTurn.value);
+            // localStorage.setItem("lastMove", "X");
             playerTurn.value = "O"
         } else if (playerTurn.value === "O") {
             gameBoard.value[x][y] = "O";
             calculateWin(playerTurn.value);
+            // localStorage.setItem("lastMove", "O");
             playerTurn.value = "X";
         }
     }
@@ -77,10 +95,10 @@ const calculateWin = (playerTurn: string) => {
     ) {
         displayWinner.value = true;
         if (playerTurn === playerX.value.symbol) {
-            playerX.value.points++
+            props.players[0].points++
             winner = playerX;
         } else if (playerTurn === playerO.value.symbol) {
-            playerO.value.points++
+            props.players[1].points++
             winner = playerO;
         }
         displayPlayAgain.value = true;
@@ -92,9 +110,6 @@ const calculateWin = (playerTurn: string) => {
         displayPlayAgain.value = true;
         displayBoard.value = false;
     }
-
-    console.log("player o points:", playerO.value.points);
-    console.log("player x points:", playerX.value.points);
     console.log(winner.value?.name);
 
 
@@ -138,18 +153,12 @@ const displayGame = () => {
 
 };
 
-const emit = defineEmits<{
-    (e: "clearGame", value: boolean): void;
-    (e: "clearPlayers", value: Player[]): void;
-    (e: "playAgain"): void;
-    (e: "displayPoints"): void;
-    (e: "displayGame"): void;
-}>();
+
 
 </script>
 
 <template>
-    <h2 v-if="firstMove">{{ playerTurn }} gör första draget!</h2>
+    <h2 v-if="firstMove">{{ playerTurn }} gör första draget</h2>
     <div v-if="displayBoard" class="grid">
         <div v-for="(row, rowIndex) in gameBoard" :key="rowIndex" class="row">
             <div v-for="(box, boxIndex) in row" :key="boxIndex" class="grid-box"

@@ -19,6 +19,11 @@ const startGame = () => {
     firstPlayer.value = Math.floor(Math.random() * 2)
 }
 
+const continueGame = () => {
+    console.log("fortsätt spela");
+    gameOn.value = true;
+};
+
 const clearGame = (value: boolean) => {
     gameOn.value = value;
     pointsOn.value = false;
@@ -42,12 +47,13 @@ const displayGame = () => {
 
 <template>
     <PrintPlayers :players="players"></PrintPlayers>
-    <AssignPlayers v-if="!gameOn" :players="players" @start-game="startGame" @continue-game="startGame"></AssignPlayers>
+    <AssignPlayers v-if="!gameOn" :players="players" @start-game="startGame" @continue-game="continueGame">
+    </AssignPlayers>
     <TheGame v-if="gameOn" :first-player="firstPlayer" :players="players" :game-on="gameOn" :points-on="pointsOn"
         @clear-game="clearGame" @clear-players="clearPlayers" @play-again="startGame" @display-points="displayPoints"
         @display-game="displayGame">
     </TheGame>
-    <PrintPoints v-if="pointsOn"></PrintPoints>
+    <PrintPoints v-if="pointsOn" :players="players"></PrintPoints>
 </template>
 
 <style scoped></style>
