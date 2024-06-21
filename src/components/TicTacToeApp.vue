@@ -6,10 +6,11 @@ import PrintPlayers from './PrintPlayers.vue';
 import TheGame from './TheGame.vue';
 import PrintPoints from './PrintPoints.vue';
 
-const players = ref<Player[]>([]);
+let players = ref<Player[]>([]);
 let gameOn = ref(false);
 let firstPlayer = ref();
 let pointsOn = ref(false);
+const storedPlayers = localStorage.getItem("players");
 
 const startGame = () => {
     gameOn.value = true;
@@ -17,6 +18,13 @@ const startGame = () => {
     console.log("THE GAMES HAVE BEGUN");
     firstPlayer.value = Math.floor(Math.random() * 2)
 }
+
+if (storedPlayers !== "") {
+    players.value = storedPlayers ? JSON.parse(storedPlayers) : null;
+    startGame();
+}
+
+
 
 const clearGame = (value: boolean) => {
     gameOn.value = value;
