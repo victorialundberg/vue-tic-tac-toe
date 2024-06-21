@@ -8,10 +8,10 @@ import PrintPoints from './PrintPoints.vue';
 
 let players = ref<Player[]>([]);
 let gameOn = ref(false);
-let firstPlayer = ref();
+let firstPlayer = ref(0);
 let pointsOn = ref(false);
 
-
+const storedPlayers = localStorage.getItem("players")
 const startGame = () => {
     gameOn.value = true;
     pointsOn.value = false;
@@ -41,7 +41,9 @@ const displayGame = () => {
     pointsOn.value = false;
 };
 
-
+const updatePlayers = () => {
+    players = storedPlayers ? JSON.parse(storedPlayers) : players;
+}
 
 </script>
 
@@ -51,7 +53,7 @@ const displayGame = () => {
     </AssignPlayers>
     <TheGame v-if="gameOn" :first-player="firstPlayer" :players="players" :game-on="gameOn" :points-on="pointsOn"
         @clear-game="clearGame" @clear-players="clearPlayers" @play-again="startGame" @display-points="displayPoints"
-        @display-game="displayGame">
+        @display-game="displayGame" @update-players="updatePlayers">
     </TheGame>
     <PrintPoints v-if="pointsOn" :players="players"></PrintPoints>
 </template>

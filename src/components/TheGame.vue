@@ -19,7 +19,9 @@ let playerTurn = ref();
 let playerX = ref();
 let playerO = ref();
 
-let lastMove = ref();
+let emptyBoard = ref(false);
+
+// let lastMove = ref();
 
 interface IGameProps {
     firstPlayer: number;
@@ -33,12 +35,16 @@ let emit = defineEmits<{
     (e: "playAgain"): void;
     (e: "displayPoints"): void;
     (e: "displayGame"): void;
+    (e: "updatePlayers", value: Player[]): void;
 }>();
 const props = defineProps<IGameProps>();
 
 const storedPlayers = localStorage.getItem("players")
 const storedGameBoard = localStorage.getItem("gameBoard");
 // const storedLastMove = localStorage.getItem("lastMove");
+if (storedGameBoard === null) {
+    emptyBoard.value = true;
+}
 
 if (localStorage.length !== 0) {
     gameBoard.value = storedGameBoard ? JSON.parse(storedGameBoard) : [["", "", ""], ["", "", ""], ["", "", ""]]
@@ -46,8 +52,10 @@ if (localStorage.length !== 0) {
     playerTurn.value = firstPlayerTurn.value?.symbol;
     playerX.value = storedPlayers ? JSON.parse(storedPlayers)[0] : null;
     playerO.value = storedPlayers ? JSON.parse(storedPlayers)[1] : null;
-    if (winner) {
-        // displayBoard.value = false;
+    emit("updatePlayers", props.players)
+    if (winner && !emptyBoard) {
+        displayWinner.value = true;
+        displayBoard.value = false;
         displayPlayAgain.value = true;
         firstMove.value = false;
     }
@@ -119,28 +127,30 @@ const calculateWin = (playerTurn: string) => {
 const playAgain = () => {
     console.log("före");
 
-    emit('playAgain');
-    console.log("efter");
-    playerTurn = ref(props.players[props.firstPlayer].symbol);
-    console.log(props.firstPlayer);
-
     localStorage.removeItem("gameBoard");
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
+
+    console.log("efter");
+    // playerTurn = ref(props.players[props.firstPlayer].symbol);
+    console.log(props.firstPlayer);
+
+
     firstMove.value = true;
     displayWinner.value = false;
     displayTied.value = false;
     displayPlayAgain.value = false;
     turnCounter.value = 0;
     displayBoard.value = true;
-
+    emit('playAgain');
 };
 
 const clearGame = () => {
     gameOn.value = false;
-    emit("clearGame", gameOn.value);
-    emit("clearPlayers", []);
+
     localStorage.clear();
     gameBoard.value = [["", "", ""], ["", "", ""], ["", "", ""]];
+    emit("clearGame", gameOn.value);
+    emit("clearPlayers", []);
 };
 
 const displayPoints = () => {
@@ -148,9 +158,9 @@ const displayPoints = () => {
 };
 
 const displayGame = () => {
-    emit("displayGame");
-    console.log("clicked");
 
+    console.log("clicked");
+    emit("displayGame");
 };
 
 
