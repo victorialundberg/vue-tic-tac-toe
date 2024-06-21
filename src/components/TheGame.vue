@@ -3,8 +3,8 @@ import { ref } from 'vue';
 import { Player } from '../models/Player';
 import { defineEmits } from 'vue';
 
-const storedGameBoard = (localStorage.getItem("gameBoard"));
-let gameBoard = ref(storedGameBoard ? JSON.parse(storedGameBoard) : [["", "", ""], ["", "", ""], ["", "", ""]])
+
+let gameBoard = ref()
 let displayPlayAgain = ref(false);
 let firstMove = ref(true);
 let gameOn = ref(true);
@@ -14,6 +14,11 @@ let turnCounter = ref(0);
 let winner = ref<Player>();
 let displayBoard = ref(true);
 
+let firstPlayerTurn = ref<Player>()
+let playerTurn = ref();
+let playerX = ref();
+let playerO = ref();
+
 interface IGameProps {
     firstPlayer: number;
     players: Player[];
@@ -22,9 +27,22 @@ interface IGameProps {
 };
 const props = defineProps<IGameProps>();
 
-let playerTurn = ref(props.players[props.firstPlayer].symbol);
-let playerX = ref(props.players[0]);
-let playerO = ref(props.players[1]);
+const storedPlayers = localStorage.getItem("players")
+const storedGameBoard = (localStorage.getItem("gameBoard"));
+
+if (localStorage.length !== 0) {
+    gameBoard.value = storedGameBoard ? JSON.parse(storedGameBoard) : [["", "", ""], ["", "", ""], ["", "", ""]]
+    firstPlayerTurn.value = storedPlayers ? JSON.parse(storedPlayers)[props.firstPlayer] : null;
+    playerTurn.value = firstPlayerTurn.value?.symbol;
+    playerX.value = storedPlayers ? JSON.parse(storedPlayers)[0] : null;
+    playerO.value = storedPlayers ? JSON.parse(storedPlayers)[1] : null;
+} else {
+    playerTurn.value = props.players[props.firstPlayer].symbol;
+    playerX.value = props.players[0];
+    playerO.value = props.players[1];
+}
+
+
 
 const makeMove = (x: number, y: number) => {
 
@@ -145,7 +163,7 @@ const emit = defineEmits<{
 
     <div>
         <button v-if="!pointsOn" @click="displayPoints">Visa poängställning</button>
-        <button v-else @click="displayGame">Stäng</button>
+        <button v-else @click="displayGame">Stäng poängställning</button>
         <button v-if="displayPlayAgain" @click="playAgain">Spela igen</button>
         <button @click="clearGame">Avsluta</button>
     </div>

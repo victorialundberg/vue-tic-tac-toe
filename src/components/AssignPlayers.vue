@@ -10,7 +10,14 @@ const props = defineProps<IPlayerProps>();
 
 const emit = defineEmits<{
     (e: "startGame"): void;
+    (e: "continueGame"): void;
 }>();
+
+
+// if (localStorage.length !== 0) {
+//     console.log("spelare finns");
+//     emit("continueGame");
+// }
 
 let playerSymbol = ref("");
 const playerName = ref("");

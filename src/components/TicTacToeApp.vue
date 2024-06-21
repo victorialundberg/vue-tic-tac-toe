@@ -10,7 +10,7 @@ let players = ref<Player[]>([]);
 let gameOn = ref(false);
 let firstPlayer = ref();
 let pointsOn = ref(false);
-const storedPlayers = localStorage.getItem("players");
+
 
 const startGame = () => {
     gameOn.value = true;
@@ -18,13 +18,6 @@ const startGame = () => {
     console.log("THE GAMES HAVE BEGUN");
     firstPlayer.value = Math.floor(Math.random() * 2)
 }
-
-if (storedPlayers !== "") {
-    players.value = storedPlayers ? JSON.parse(storedPlayers) : null;
-    startGame();
-}
-
-
 
 const clearGame = (value: boolean) => {
     gameOn.value = value;
@@ -49,7 +42,7 @@ const displayGame = () => {
 
 <template>
     <PrintPlayers :players="players"></PrintPlayers>
-    <AssignPlayers v-if="!gameOn" :players="players" @start-game="startGame"></AssignPlayers>
+    <AssignPlayers v-if="!gameOn" :players="players" @start-game="startGame" @continue-game="startGame"></AssignPlayers>
     <TheGame v-if="gameOn" :first-player="firstPlayer" :players="players" :game-on="gameOn" :points-on="pointsOn"
         @clear-game="clearGame" @clear-players="clearPlayers" @play-again="startGame" @display-points="displayPoints"
         @display-game="displayGame">

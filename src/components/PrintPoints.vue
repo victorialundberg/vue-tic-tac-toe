@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Player } from '../models/Player';
-
+// Get from state instead for local storage
 const storedPlayers = localStorage.getItem("players");
 let players: Player[] = storedPlayers ? JSON.parse(storedPlayers) : null;
 
